@@ -18,8 +18,8 @@
 4. **Environment Variables:** Credentials (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`) are stored safely in Render's dashboard.
 
 ## 🏗 Code Structure Preference
-* **Modularized:** Do not put everything in one massive `index.js` file.
-* **Scalable:** Separate concerns into folders (e.g., `/routes`, `/controllers`, `/config`) even if the project is starting small.
+* **Modularized:** Code is separated into logical folders (e.g., `/routes`, `/config`) rather than sitting in one massive file.
+* **Entry Point:** The main server file is named `server.js`.
 
 ## 🚀 Deployment (Render)
 * **Build Command:** `npm install`
