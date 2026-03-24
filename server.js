@@ -3,6 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
+const path = require('path'); // Added to help locate your HTML file
 
 const app = express();
 // Render automatically provides a PORT environment variable
@@ -17,8 +18,10 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 app.use(cors()); // Allows your frontend to connect safely
 app.use(express.json()); // Allows your backend to read JSON data
 
+// NEW: Tells the server to serve any files inside a folder named 'public'
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Secure Database Route
-// The frontend calls this endpoint, and the backend securely fetches data from Supabase
 app.get('/api/data', async (req, res) => {
   // NOTE: Replace 'your_table_name' with an actual table in your Supabase project
   const { data, error } = await supabase.from('your_table_name').select('*').limit(5);
@@ -31,9 +34,14 @@ app.get('/api/data', async (req, res) => {
   res.json(data); 
 });
 
-// Simple health check route to verify Render is working
-app.get('/', (req, res) => {
-  res.send('Backend is running securely on Render and connected to Supabase!');
+// Changed from '/' to '/api/health' so it doesn't block your landing page
+app.get('/api/health', (req, res) => {
+  res.send('Backend API is running securely on Render!');
+});
+
+// NEW: Catch-all route. If a user visits your site, send them the index.html page
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(port, () => {
