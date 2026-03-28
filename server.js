@@ -1,49 +1,56 @@
-// File Path: ./server.js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My App</title>
+    <style>
+        /* Mobile-friendly styling matching your screenshot */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #e2e8f0; /* Soft gray background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .card {
+            background: white;
+            padding: 2.5rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+            width: 320px;
+        }
+        h1 {
+            margin-top: 0;
+            color: #2d3748;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        p {
+            color: #4a5568;
+            line-height: 1.5;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
 
-const express = require('express');
-const cors = require('cors');
-const { createClient } = require('@supabase/supabase-js');
-const path = require('path'); // Added to help locate your HTML file
+    <div class="card">
+        <h1>Welcome to<br>My App!</h1>
+        <p>This is the frontend landing page. It is safely separated from the database.</p>
+        <p>Later, we will add buttons here that securely ask our Node.js backend for data.</p>
+    </div>
 
-const app = express();
-// Render automatically provides a PORT environment variable
-const port = process.env.PORT || 3000; 
-
-// Initialize Supabase securely
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-// Middleware
-app.use(cors()); // Allows your frontend to connect safely
-app.use(express.json()); // Allows your backend to read JSON data
-
-// NEW: Tells the server to serve any files inside a folder named 'public'
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Secure Database Route
-app.get('/api/data', async (req, res) => {
-  // NOTE: Replace 'your_table_name' with an actual table in your Supabase project
-  const { data, error } = await supabase.from('your_table_name').select('*').limit(5);
-
-  if (error) {
-    return res.status(500).json({ error: error.message });
-  }
-  
-  // Send the secure data back to the frontend
-  res.json(data); 
-});
-
-// Changed from '/' to '/api/health' so it doesn't block your landing page
-app.get('/api/health', (req, res) => {
-  res.send('Backend API is running securely on Render!');
-});
-
-// NEW: Catch-all route. If a user visits your site, send them the index.html page
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.listen(port, () => {
-  console.log(`Server is live on port ${port}`);
-});
+</body>
+</html>
